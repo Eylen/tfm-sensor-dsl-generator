@@ -1,0 +1,1 @@
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("MotionSensorServiceChanged"));

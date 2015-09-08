@@ -1,0 +1,11 @@
+    <%import com.eylen.sensordsl.enums.MediaType%>
+    public void <%=methodName%>(){
+        Intent intent = new Intent(MediaStore.<%=mediaType==MediaType.PICTURE?"ACTION_IMAGE_CAPTURE":"ACTION_VIDEO_CAPTURE"%>);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, <%=fileUri%>);
+    <%if (mediaType==MediaType.VIDEO) {%>
+        <%if (videoQuality!=null) {%>intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, <%=videoQuality%>);<%}%>
+        <%if (videoDurationLimit!=null) {%>intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, <%=videoDurationLimit%>);<%}%>
+        <%if (videoSizeLimit != null) {%>intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, <%=videoSizeLimit%>);<%}%>
+    <%}%>
+        startActivityForResult(intent, <%=requestCodeName%>);
+    }

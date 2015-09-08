@@ -1,0 +1,6 @@
+    <%if (createMethod) {%>@Override
+    public void onStop() {<%}%>
+        if (<%=sensorManager%> != null) {
+            <%=sensorManager%>.unregisterListener(sensorDSLMotionListener);
+        }
+    <%if (createMethod) {%>}<%}%>

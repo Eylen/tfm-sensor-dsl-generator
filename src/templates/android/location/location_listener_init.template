@@ -1,0 +1,5 @@
+    <%if (createMethod) {%>@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);<%}%>
+        mSensorDSLLocationListener = new SensorDSLLocationListener(getContext());
+    <%if (createMethod) {%>}<%}%>

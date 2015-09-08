@@ -1,0 +1,16 @@
+        private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (action.equals()){
+                    int sensor = intent.getInteger("sensorEventType", 0);
+                    float[] values = intent.getFloatArray("sensorEventValues", new float[]);
+                    <%if (accelerometer && accelerometerCallback) {%>if (sensor == Sensor.TYPE_ACCELEROMETER) {
+                        <%=accelerometerCallback%>(values);
+                    }<%}%>
+                    <%if (gyroscope && gyroscopeCallback) {%>if (sensor == Sensor.TYPE_GYROSCOPE) {
+                        <%=gyroscopeCallback%>(values);
+                    }<%}%>
+                }
+            }
+        };

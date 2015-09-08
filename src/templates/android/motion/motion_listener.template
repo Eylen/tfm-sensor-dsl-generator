@@ -1,0 +1,17 @@
+    public class SensorDSLMotionListener implements SensorEventListener {
+        @Override
+            public void onSensorChanged(SensorEvent event) {
+                switch (event.sensor.getType()){
+                    case Sensor.TYPE_ACCELEROMETER:
+                        <%if (accelerometer && accelerometerCallback) {%><%=accelerometerCallback%>(event.values);<%}%>
+                        break;
+                    case Sensor.TYPE_GYROSCOPE:
+                        <%if (gyroscope && gyroscopeCallback) {%><%=gyroscopeCallback%>(event.values);<%}%>
+                        break;
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            }
+    }

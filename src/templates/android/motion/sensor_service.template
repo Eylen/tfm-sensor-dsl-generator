@@ -1,0 +1,48 @@
+package blabla;
+
+import android.app.service;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.os.IBinder;
+import android.content.Intent;
+
+public class MotionSensorDSLService extends Service implements SensorEventListener {
+    private static final String TAG = "MotionSensorDSLService";
+
+    private SensorManager mSensorManager = null;
+<%=variables.join("\n")%>
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        <%=sensorsInitialization%>
+        <%=registerListeners%>
+
+        return START_STICKY;
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // do nothing
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        Intent i = new Intent("MotionSensorServiceChanged");
+        i.putExtra("sensorEventType", event.sensor.getType());
+        i.putExtra("sensorEventValues", event.values);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(i);
+    }
+
+    @Override
+    public void onDestroy(){
+        mSensorManager.unregisterListener(this);
+    }
+}

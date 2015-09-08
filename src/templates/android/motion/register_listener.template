@@ -1,0 +1,10 @@
+    <%if (createMethod) {%>@Override
+    public void onResume() {
+        super.onResume();<%}%>
+        <%if (gyroscope) {%>if (mGyroscopeSensor != null) {
+            mSensorManager.registerListener(<%=listener%>, mGyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }<%}%>
+        <%if (accelerometer) {%>if (mAccelerometerSensor != null) {
+            mSensorManager.registerListener(<%=listener%>, mAccelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }<%}%>
+    <%if (createMethod) {%>}<%}%>

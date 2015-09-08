@@ -1,0 +1,5 @@
+<%if (createMethod) {%> @Override
+    public void onResume(){
+        super.onResume();<%}%>
+        mSensorDSLLocationListener.startLocationUpdates();
+    <%if (createMethod){%>}<%}%>

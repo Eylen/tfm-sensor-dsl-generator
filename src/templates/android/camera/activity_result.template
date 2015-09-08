@@ -1,0 +1,11 @@
+    <%if (createMethod) {%>public void onActivityResult(int requestCode, int resultCode, Intent data) {<%}%>
+        if (requestCode == <%=requestCodeName%>) {
+            if (resultCode == Activity.RESULT_OK) {
+                <%if (successCallback) { out.println successCallback+"(data);" }%>
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                <%if (cancelCallback) { out.println cancelCallback +"();" }%>
+            } else {
+                <%if (errorCallback) { out.println errorCallback +"();" }%>
+            }
+        }
+    <%if (createMethod) {%>}<%}%>

@@ -1,0 +1,5 @@
+    <%if (createMethod) {%>@Override
+    public void onPause() {
+        super.onPause();<%}%>
+        mSensorDSLLocationListener.stopLocationUpdates();
+    <%if (createMethod) {%>}<%}%>
