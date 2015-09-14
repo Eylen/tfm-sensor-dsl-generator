@@ -22,18 +22,18 @@ class AndroidMotionSensorsCodeGenerator extends MotionSensorsCodeGenerator{
     @Override
     protected void makeGeneration() {
         String templateDirPath = Constants.TEMPLATES + "/android/motion/"
-        Template sensorVariableTemplate = templateEngine.createTemplate(new File(templateDirPath + "sensor_variable.template"))
-        Template sensorInitializerTemplate = templateEngine.createTemplate(new File(templateDirPath + "sensor_initialize.template"))
-        Template registerListenerTemplate = templateEngine.createTemplate(new File(templateDirPath + "register_listener.template"))
+        Template sensorVariableTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "sensor_variable.template")))
+        Template sensorInitializerTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "sensor_initialize.template")))
+        Template registerListenerTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "register_listener.template")))
 
         List<String> variables = new ArrayList<>()
         if (foregroundHelper){
             //TODO controlar nombres de variables
-            Template listenerTemplate = templateEngine.createTemplate(new File(templateDirPath + "motion_listener.template"))
-            Template sensorListenerDeclarationTemplate = templateEngine.createTemplate(new File(templateDirPath + "sensor_listener_declaration.template"))
-            Template unregisterListenerTemplate = templateEngine.createTemplate(new File(templateDirPath + "unregister_listener.template"))
-            Template sensorManagerVariableTemplate = templateEngine.createTemplate(new File(templateDirPath + "sensor_manager_variable.template"))
-            Template importsTemplate = templateEngine.createTemplate(new File(templateDirPath + "imports.template"))
+            Template listenerTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "motion_listener.template")))
+            Template sensorListenerDeclarationTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "sensor_listener_declaration.template")))
+            Template unregisterListenerTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "unregister_listener.template")))
+            Template sensorManagerVariableTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "sensor_manager_variable.template")))
+            Template importsTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "imports.template")))
 
             String importLines = importsTemplate.make().toString()
             importLines.eachLine {String line ->
@@ -92,9 +92,9 @@ class AndroidMotionSensorsCodeGenerator extends MotionSensorsCodeGenerator{
 
         }
         if (backgroundHelper){
-            Template sensorServiceTemplate = templateEngine.createTemplate(new File(templateDirPath + "sensor_service.template"))
-            Template broadcastReceiverTemplate = templateEngine.createTemplate(new File(templateDirPath + "broadcast_receiver.template"))
-            Template broadcastRegisterTemplate = templateEngine.createTemplate(new File(templateDirPath + "broadcast_register.template"))
+            Template sensorServiceTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "sensor_service.template")))
+            Template broadcastReceiverTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "broadcast_receiver.template")))
+            Template broadcastRegisterTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "broadcast_register.template")))
 
             ParsedMethod parsedMethod = GeneratorUtils.methodExists(fileParser, "onCreate", true)
             boolean createMethod = !parsedMethod

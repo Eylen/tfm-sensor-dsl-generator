@@ -1,8 +1,12 @@
 import com.eylen.sensordsl.SensorDSL
+import com.eylen.sensordsl.SensorDSLScript
 import com.eylen.sensordsl.generator.MainCodeGenerator
 import com.eylen.sensordsl.generator.enums.Platform
 import com.eylen.sensordsl.generator.utils.Constants
+import groovy.transform.TypeChecked
 import org.apache.ivy.util.FileUtil
+import org.codehaus.groovy.control.CompilerConfiguration
+import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer
 
 String platform = this.args[0]
 String path = this.args[1]
@@ -55,9 +59,17 @@ dir.eachFileRecurse(groovy.io.FileType.FILES) {File it->
         if (codeFiles.size() > 0){
             codeFile = new File(codeFiles[0])
         }
+        SensorDSL sensorDSL = new SensorDSL()
+        binding = new Binding(sensorDSL:sensorDSL)
+        def compilerConfiguration = new CompilerConfiguration()
+        compilerConfiguration.scriptBaseClass = SensorDSLScript.class.name
+        compilerConfiguration.addCompilationCustomizers(
+                new ASTTransformationCustomizer(TypeChecked)
+        )
 
-        Script dslScript = shell.parse(it)
-        SensorDSL sensorDSL = (SensorDSL) dslScript.run()
+        shell = new GroovyShell(this.class.classLoader, binding, compilerConfiguration)
+        shell.evaluate(it)
+
         if (sensorDSL){
             MainCodeGenerator codeGenerator = new MainCodeGenerator(sensorDSL, codeFile, pathToFile, destDirectory)
             codeGenerator.generateCode(Platform.ANDROID)

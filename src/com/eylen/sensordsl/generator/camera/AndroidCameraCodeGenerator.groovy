@@ -19,10 +19,10 @@ class AndroidCameraCodeGenerator extends CameraCodeGenerator{
     @Override
     protected void makeGeneration() {
         String templateDirPath = Constants.TEMPLATES + "/android/camera/"
-        Template cameraMethodTemplate = templateEngine.createTemplate(new File(templateDirPath + AndroidConstants.Camera.Template.CAMERA_METHOD))
-        Template activityResultTemplate = templateEngine.createTemplate(new File(templateDirPath + AndroidConstants.Camera.Template.ACTIVITY_RESULT))
-        Template requestCodeTemplate = templateEngine.createTemplate(new File(templateDirPath + AndroidConstants.Camera.Template.ACTIVITY_CODE_VAR))
-        Template importsTemplate = templateEngine.createTemplate(new File(templateDirPath + "imports.template"))
+        Template cameraMethodTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + AndroidConstants.Camera.Template.CAMERA_METHOD)))
+        Template activityResultTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + AndroidConstants.Camera.Template.ACTIVITY_RESULT)))
+        Template requestCodeTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + AndroidConstants.Camera.Template.ACTIVITY_CODE_VAR)))
+        Template importsTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "imports.template")))
         boolean createOnActivityResultMethod = !fileParser.methods.containsKey("onActivityResult")
 
         List<String> variables = new ArrayList<>()

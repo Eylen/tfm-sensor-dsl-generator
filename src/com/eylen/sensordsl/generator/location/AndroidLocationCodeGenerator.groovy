@@ -20,11 +20,11 @@ class AndroidLocationCodeGenerator extends LocationCodeGenerator{
     @Override
     void makeGeneration() {
         String templateDirPath = Constants.TEMPLATES + "/android/location/"
-        Template listenerTemplate = templateEngine.createTemplate(new File(templateDirPath + "location_listener.template"))
-        Template listenerDeclarationTemplate = templateEngine.createTemplate(new File(templateDirPath + "location_listener_declaration.template"))
-        Template listenerInitTemplate = templateEngine.createTemplate(new File(templateDirPath + "location_listener_init.template"))
-        Template startListenerTemplate = templateEngine.createTemplate(new File(templateDirPath + "start_listener.template"))
-        Template stopListenerTemplate = templateEngine.createTemplate(new File(templateDirPath + "stop_listener.template"))
+        Template listenerTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "location_listener.template")))
+        Template listenerDeclarationTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "location_listener_declaration.template")))
+        Template listenerInitTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "location_listener_init.template")))
+        Template startListenerTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "start_listener.template")))
+        Template stopListenerTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "stop_listener.template")))
 
         int packageStart = fileParser.beforeInnerClass.indexOf("package")
         String packageDeclaration = null
