@@ -1,3 +1,16 @@
 Manifest-Version: 1.0
+Class-Path: log4j-api-2.3.jar log4j-core-2.3.jar ant-1.9.4.jar ant-ant
+ lr-1.9.4.jar ant-junit-1.9.4.jar ant-launcher-1.9.4.jar bsf-2.4.0.jar
+  commons-cli-1.2.jar commons-logging-1.2.jar gpars-1.2.1.jar groovy-2
+ .4.3.jar groovy-ant-2.4.3.jar groovy-bsf-2.4.3.jar groovy-console-2.4
+ .3.jar groovy-docgenerator-2.4.3.jar groovy-groovydoc-2.4.3.jar groov
+ y-groovysh-2.4.3.jar groovy-jmx-2.4.3.jar groovy-json-2.4.3.jar groov
+ y-jsr223-2.4.3.jar groovy-nio-2.4.3.jar groovy-servlet-2.4.3.jar groo
+ vy-sql-2.4.3.jar groovy-swing-2.4.3.jar groovy-templates-2.4.3.jar gr
+ oovy-test-2.4.3.jar groovy-testng-2.4.3.jar groovy-xml-2.4.3.jar hamc
+ rest-core-1.3.jar ivy-2.4.0.jar jansi-1.11.jar jcommander-1.47.jar jl
+ ine-2.12.jar jsp-api-2.0.jar jsr166y-1.7.0.jar junit-4.12.jar multive
+ rse-core-0.7.0.jar openbeans-1.0.jar qdox-1.12.1.jar servlet-api-2.4.
+ jar testng-6.8.13.jar xmlpull-1.1.3.1.jar xstream-1.4.7.jar
 Main-Class: Generator
 
