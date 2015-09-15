@@ -1,0 +1,5 @@
+<%=packageName%>
+
+public interface SensorDSLLocationListenerInterface {
+    <%if (locationTrackCallback) {%>public void <%=locationTrackCallback%>(Location location);<%}%>
+}

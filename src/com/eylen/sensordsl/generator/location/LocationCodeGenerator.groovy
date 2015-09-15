@@ -27,7 +27,7 @@ abstract class LocationCodeGenerator implements ICodeGenerator<LocationHandler>{
         handlers.each {LocationHandler handler->
             if (handler.lastKnownLocationHandler){
                 if (!lastHelper) lastHelper = new LastLocationGeneratorHelper()
-                lastHelper.lastLocationCallback = handler.lastKnownLocationHandler.varName
+                lastHelper.lastLocationCallback = handler.lastKnownLocationHandler.callbackMethod
             }
             if (handler.locationTrackingHandler){
                 def lastHandler = handler.locationTrackingHandler

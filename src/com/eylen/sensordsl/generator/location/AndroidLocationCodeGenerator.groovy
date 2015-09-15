@@ -25,6 +25,7 @@ class AndroidLocationCodeGenerator extends LocationCodeGenerator{
         Template listenerInitTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "location_listener_init.template")))
         Template startListenerTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "start_listener.template")))
         Template stopListenerTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "stop_listener.template")))
+        Template importsTemplate = templateEngine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream(templateDirPath + "imports.template")))
 
         int packageStart = fileParser.beforeInnerClass.indexOf("package")
         String packageDeclaration = null
@@ -33,8 +34,18 @@ class AndroidLocationCodeGenerator extends LocationCodeGenerator{
             packageDeclaration = packageDeclaration.substring(0, packageDeclaration.indexOf(";")+1)
         }
 
+        String importLines = importsTemplate.make().toString()
+        importLines.eachLine {String line ->
+            if (!fileParser.scriptFile.contains(line.trim())){
+                fileParser.imports << line
+            }
+        }
+
         String priorityType = getPriorityType(trackerHelper?.priorityType)
         String listenerClass = listenerTemplate.make(packageName:packageDeclaration, lastLocationCallback:lastHelper?.lastLocationCallback, locationTrackCallback:trackerHelper?.callbackMethod, startMethod:trackerHelper?.startMethod?:"startTracking", stopMethod:trackerHelper?.stopMethod?:"stopMethod", interval:trackerHelper?.interval, fastestInterval:trackerHelper?.fastestInterval, locationPriority:priorityType).toString()
+        listenerClass.eachLine {
+            fileParser.lines << it
+        }
         fileParser.lines.add(0, listenerDeclarationTemplate.make().toString())
 
         //Initialize sensorManager and sensors
@@ -68,7 +79,7 @@ class AndroidLocationCodeGenerator extends LocationCodeGenerator{
             GeneratorUtils.createOrUpdateParsedMethod(parsedMethod, createMethod, "public void onPause()", lines, fileParser)
         }
 
-        fileParser.newClasses["SensorDSLLocationListener.java"]=listenerClass
+//        fileParser.newClasses["SensorDSLLocationListener.java"]=listenerClass
     }
 
     private String getPriorityType(LocationPriorityType priorityType){

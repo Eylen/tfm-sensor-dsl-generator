@@ -34,13 +34,9 @@ sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
 
         String fileName = it.name.substring(0, it.name.indexOf(".dsl.groovy"))
         generatedFiles << fileName
-        /*def codeFiles = new FileNameFinder().getFileNames(it.parent, fileName+".*", it.name)
-        File codeFile = null
-        if (codeFiles.size() > 0){
-            codeFile = new File(codeFiles[0])
-        }*/
+
         SensorDSL sensorDSL = new SensorDSL()
-        binding = new Binding(sensorDSL:sensorDSL)
+        binding = new Binding(sensorDSL:sensorDSL, codeFile:null)
         def compilerConfiguration = new CompilerConfiguration()
         compilerConfiguration.scriptBaseClass = SensorDSLScript.class.name
         compilerConfiguration.addCompilationCustomizers(

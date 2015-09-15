@@ -1,79 +1,66 @@
-<%=packageName%>
+    public class SensorDSLLocationListener implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        private GoogleApiClient mGoogleApiClient;
+        private boolean mRequestingLocationUpdates;
+        private LocationRequest mLocationRequest;
+        private WeakReference<Context> mContext;
 
-import android.content.Context;
-import android.location.Location;
-import android.os.Bundle;
-import java.lang.ref.WeakReference;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationServices;
-
-public class SensorDSLLocationListener implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-
-    private WeakReference<Context> mContext;
-
-    public SensorDSLLocationListener(Context context){
-        this.mContext = new WeakReference(context);
-        buildGoogleApiClient();
-        this.mRequestingLocationUpdates = false;
-        this.mLocationRequest = null;
-    }
-
-    private GoogleApiClient mGoogleApiClient;
-    private boolean mRequestingLocationUpdates;
-    private LocationRequest mLocationRequest;
-
-    protected synchronized void buildGoogleApiClient() {
-        Context context = mContext.get();
-        mGoogleApiClient = new GoogleApiClient.Builder(context)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        <%if (lastLocationCallback) {%><%=lastLocationCallback%>(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));<%}%>
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        <%if (locationTrackCallback) {%><%=locationTrackCallback%>(location);<%}%>
-    }
-
-    protected void <%=startMethod%>() {
-        if (mLocationRequest == null) {
-            createLocationRequest();
+        public SensorDSLLocationListener(Context context){
+            this.mContext = new WeakReference(context);
+            buildGoogleApiClient();
+            this.mRequestingLocationUpdates = false;
+            this.mLocationRequest = null;
+            mGoogleApiClient.connect();
         }
-        if (mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-            mRequestingLocationUpdates = true;
+
+        protected synchronized void buildGoogleApiClient() {
+            Context context = mContext.get();
+            mGoogleApiClient = new GoogleApiClient.Builder(context)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+
+        @Override
+        public void onConnected(Bundle bundle) {
+            <%if (lastLocationCallback) {%><%=lastLocationCallback%>(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));<%}%>
+
+        }
+
+        @Override
+        public void onConnectionSuspended(int i) {
+        }
+
+        @Override
+        public void onConnectionFailed(ConnectionResult connectionResult) {
+        }
+
+        @Override
+        public void onLocationChanged(Location location) {
+            <%if (locationTrackCallback) {%><%=locationTrackCallback%>(location);<%}%>
+        }
+
+        protected void <%=startMethod%>() {
+            if (mLocationRequest == null) {
+                createLocationRequest();
+            }
+            if (mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+                mRequestingLocationUpdates = true;
+            }
+        }
+
+        protected void <%=stopMethod%>() {
+            if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
+                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            }
+            mRequestingLocationUpdates = false;
+        }
+
+        protected void createLocationRequest() {
+            mLocationRequest = new LocationRequest();
+            <%if (interval) {%>mLocationRequest.setInterval(<%=interval%>);<%}%>
+            <%if (fastestInterval) {%>mLocationRequest.setFastestInterval(<%=fastestInterval%>);<%}%>
+            <%if (locationPriority) {%>mLocationRequest.setPriority(LocationRequest.<%=locationPriority%>);<%}%>
         }
     }
-
-    protected void <%=stopMethod%>() {
-        if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        }
-        mRequestingLocationUpdates = false;
-    }
-
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        <%if (interval) {%>mLocationRequest.setInterval(<%=interval%>);<%}%>
-        <%if (fastestInterval) {%>mLocationRequest.setFastestInterval(<%=fastestInterval%>);<%}%>
-        <%if (locationPriority) {%>mLocationRequest.setPriority(LocationRequest.<%=locationPriority%>);<%}%>
-    }
-}

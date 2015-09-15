@@ -11,18 +11,22 @@ import com.eylen.sensordsl.generator.motion.MotionSensorsCodeGeneratorFactory
 import com.eylen.sensordsl.generator.utils.Constants
 import com.eylen.sensordsl.generator.utils.parser.FileParser
 import com.eylen.sensordsl.generator.utils.parser.ParsedMethod
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 class MainCodeGenerator {
     private SensorDSL sensorDSL
     private File codeFile
     private String pathToFile
     private File destDir
+    private Logger log
 
     public MainCodeGenerator(SensorDSL sensorDSL, File codeFile, String pathToFile, File destDir){
         this.sensorDSL = sensorDSL
         this.codeFile = codeFile
         this.pathToFile = pathToFile
         this.destDir = destDir
+        log = LogManager.getLogger(MainCodeGenerator.class)
     }
 
     public void generateCode(Platform platform){
@@ -56,8 +60,8 @@ class MainCodeGenerator {
             if (isAddMethodTag(it)){
                 ParsedMethod method = fileParser.methods[getMethodNameFromTag(it)]
                 if (!method){
-                    //TODO poner bien el error
-                    throw new Exception("Errrrrrooooooooooooooooooooooooooooor")
+                    log.warn("No method found for ${getMethodNameFromTag(it)}")
+//                    throw new Exception("Errrrrrooooooooooooooooooooooooooooor")
                 } else {
                     method.lines.each {String methodLine-> out.writeLine methodLine}
                 }
