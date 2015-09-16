@@ -1,8 +1,12 @@
+import com.eylen.sensordsl.Permission
 import com.eylen.sensordsl.SensorDSL
 import com.eylen.sensordsl.SensorDSLScript
 import com.eylen.sensordsl.generator.MainCodeGenerator
 import com.eylen.sensordsl.generator.enums.Platform
+import com.eylen.sensordsl.generator.permission.PermissionCodeGenerator
+import com.eylen.sensordsl.generator.permission.PermissionCodeGeneratorFactory
 import com.eylen.sensordsl.generator.utils.Constants
+import com.eylen.sensordsl.generator.utils.GeneratorUtils
 import groovy.transform.Field
 import groovy.transform.TypeChecked
 import org.apache.ivy.util.FileUtil
@@ -27,8 +31,12 @@ log.info "Starting Generator for platform ${platform}"
 log.info new Date()
 log.info "-------------------------------------------------------------------------------------------------------------"
 List<String> generatedFiles = new ArrayList<>()
+
+File permissionFile = null
+Set<Permission> permissions = new HashSet<>()
 sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
     String pathToFile = it.absolutePath - sourceDirectory.absolutePath - it.name
+
     if(it.name.endsWith('.dsl.groovy')) {
         log.info "Parsing DSL script for file: " + it.name
 
@@ -36,7 +44,7 @@ sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
         generatedFiles << fileName
 
         SensorDSL sensorDSL = new SensorDSL()
-        binding = new Binding(sensorDSL:sensorDSL, codeFile:null)
+        binding = new Binding(sensorDSL: sensorDSL, codeFile: null)
         def compilerConfiguration = new CompilerConfiguration()
         compilerConfiguration.scriptBaseClass = SensorDSLScript.class.name
         compilerConfiguration.addCompilationCustomizers(
@@ -46,10 +54,14 @@ sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
         shell = new GroovyShell(this.class.classLoader, binding, compilerConfiguration)
         shell.evaluate(it)
 
-        if (sensorDSL){
+        if (sensorDSL) {
+            permissions.addAll sensorDSL.permissionList
             MainCodeGenerator codeGenerator = new MainCodeGenerator(sensorDSL, binding.codeFile, pathToFile, destDirectory)
             codeGenerator.generateCode(platform)
         }
+    } else if (GeneratorUtils.isPermissionFile(it, platform)) {
+       permissionFile = it
+
     } else {
         String fileNameWoExtension = it.name.substring(0, it.name.lastIndexOf("."))
         if (!generatedFiles.contains(fileNameWoExtension)) {
@@ -60,6 +72,28 @@ sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
             FileUtil.copy(it, new File(fullDestDir.absolutePath + "/" + it.name), null, true)
         }
     }
+}
+if (permissionFile){
+    log.info "Adding permissions in file: " + permissionFile.name
+    PermissionCodeGenerator permissionCodeGenerator = PermissionCodeGeneratorFactory.newInstance(platform)
+    List<String> permissionsString = permissionCodeGenerator.generateCode(permissions, permissionFile)
+
+    String pathToFile = permissionFile.absolutePath - sourceDirectory.absolutePath - permissionFile.name
+    File fullDestDir = new File(destDirectory.absolutePath + pathToFile)
+    if (!fullDestDir.exists()){
+        fullDestDir.mkdirs()
+    }
+
+    def before = permissionFile.text.substring(0, permissionCodeGenerator.getPermissionsStart(permissionFile))
+    def after = permissionFile.text.substring(permissionCodeGenerator.getPermissionsStart(permissionFile))
+    def out = new File(fullDestDir.absolutePath+"/"+permissionFile.name).newWriter(false)
+    out.write before
+    permissionsString.each {
+        out.writeLine it
+    }
+    out.write after
+    out.flush()
+    out.close()
 }
 log.info "-------------------------------------------------------------------------------------------------------------"
 log.info "Generator ended"

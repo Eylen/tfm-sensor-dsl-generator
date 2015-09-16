@@ -1,5 +1,6 @@
 package com.eylen.sensordsl.generator.utils
 
+import com.eylen.sensordsl.generator.enums.Platform
 import com.eylen.sensordsl.generator.utils.parser.FileParser
 import com.eylen.sensordsl.generator.utils.parser.ParsedMethod
 
@@ -32,5 +33,9 @@ class GeneratorUtils {
         } else {
             fileParser.methods[methodName]
         }
+    }
+
+    public static boolean isPermissionFile(File file, Platform platform){
+        return (platform == Platform.ANDROID && file.name == 'AndroidManifest.xml')
     }
 }
