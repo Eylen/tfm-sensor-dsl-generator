@@ -1,0 +1,29 @@
+- (void) imagePickerController: (UIImagePickerController *) picker didFinishPickingMediaWithInfo: (NSDictionary *) info {
+    NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
+
+    if (CFStringCompare ((CFStringRef) mediaType, kUTTypeImage, 0)
+            == kCFCompareEqualTo) {
+        UIImage *originalImage, *imageToSave;
+        originalImage = (UIImage *) [info objectForKey:
+                    UIImagePickerControllerOriginalImage];
+
+        UIImageWriteToSavedPhotosAlbum (originalImage, nil, nil , nil);
+        <%cameraSuccessCallbacks.each {callback->%>
+        [self <%=callback%>];<%}%>
+    }
+    if (CFStringCompare ((CFStringRef) mediaType, kUTTypeMovie, 0)
+            == kCFCompareEqualTo) {
+        NSString *moviePath = [[info objectForKey:
+                    UIImagePickerControllerMediaURL] path];
+
+        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (moviePath)) {
+            UISaveVideoAtPathToSavedPhotosAlbum (
+                    moviePath, nil, nil, nil);
+        }
+        <%videoSuccessCallbacks.each {callback->%>
+        [self <%=callback%>];<%}%>
+    }
+
+    [[picker parentViewController] dismissModalViewControllerAnimated: YES];
+    [picker release];
+}

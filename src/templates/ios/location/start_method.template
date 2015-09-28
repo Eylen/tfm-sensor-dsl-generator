@@ -1,0 +1,6 @@
+-(void)<%=methodName%> {
+	CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+	if (status==kCLAuthorizationStatusAuthorizedWhenInUse) {
+		[self.locationManager startUpdatingLocation];
+    }
+}

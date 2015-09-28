@@ -1,0 +1,8 @@
+- (void) imagePickerControllerDidCancel: (UIImagePickerController *) picker {
+    [[picker parentViewController] dismissModalViewControllerAnimated: YES];
+    [picker release];
+     <%cameraCancelCallbacks.each {callback->%>
+     [self <%=callback%>];<%}%>
+     <%videoCancelCallbacks.each {callback->%>
+     [self <%=callback%>];<%}%>
+}

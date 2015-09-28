@@ -1,0 +1,4 @@
+<%if (createMethod) {%>-viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear];<%}%>
+     <%if (automatic) {%>[self.locationManager stopUpdatingLocation];<%}%>
+<%if (createMethod){%>}<%}%>

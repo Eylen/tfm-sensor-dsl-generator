@@ -1,11 +1,14 @@
 package com.eylen.sensordsl.generator.utils.parser
 
+import com.eylen.sensordsl.generator.enums.Platform
 import com.eylen.sensordsl.generator.utils.Constants
+import com.eylen.sensordsl.generator.utils.FileParserUtils
 
 
 class FileParser {
     Map<String, ParsedMethod> methods
     String scriptFile
+    String className
     int classStart
     int classEnd
     int firstMethod
@@ -21,6 +24,7 @@ class FileParser {
 
     public FileParser(File file){
         String scriptFile = file.readLines().join("\n")
+        this.className = file.name.substring(0, file.name.lastIndexOf("."))
         this.methods = new HashMap<>()
         this.classEnd = -1
         this.classStart = -1
@@ -32,10 +36,11 @@ class FileParser {
         this.imports = new ArrayList<>()
     }
 
-    public void parseFile(){
-        classStart = scriptFile.indexOf("{")
-        classEnd = scriptFile.lastIndexOf("}")
-        importsStart = scriptFile.indexOf("import ")
+    public void parseFile(Platform platform){
+
+        classStart = FileParserUtils.getClassStart(platform, className, scriptFile)
+        classEnd = scriptFile.lastIndexOf(FileParserUtils.getClassEnd(platform))
+        importsStart = scriptFile.indexOf(FileParserUtils.getImportStatement(platform))
 
         beforeInnerClass = scriptFile.substring(0, classStart)
 

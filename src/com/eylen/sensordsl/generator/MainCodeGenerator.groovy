@@ -31,7 +31,7 @@ class MainCodeGenerator {
 
     public void generateCode(Platform platform){
         FileParser fileParser = new FileParser(codeFile)
-        fileParser.parseFile()
+        fileParser.parseFile(platform)
         if (!codeFile){
             throw new Exception("A codeFile with the same name must exist to be able to generate code")
         }

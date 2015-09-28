@@ -1,0 +1,3 @@
+-(CLLocation)<%=methodName%> {
+    return self.locationManager.location
+}

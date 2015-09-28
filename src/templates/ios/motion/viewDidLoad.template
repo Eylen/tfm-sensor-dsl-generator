@@ -1,0 +1,15 @@
+<%if (createMethod) {%>- (void)viewDidLoad {
+    [super viewDidLoad];<%}%>
+    <%if (accelerometer) {%>if ([self.motionManager isAccelerometerAvailable]) {
+        [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
+            <%accelerometerCallbacks.each{callback->%>
+            [self <%=callback%>:accelerometerData.acceleration];<%}%>
+        }];
+    }<%}%>
+    <%if (gyroscope) {%>if ([self.motionManager isGyroAvailable]) {
+        [self.motionManager startGyroUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMGyroData *gyroData, NSError *error) {
+            <%accelerometerCallbacks.each{callback->%>
+            [self <%=gyroscopeCallback%>:gyroData.rotationRate];<%}%>
+        }];
+    }<%}%>
+<%if (createMethod) {%>}<%}%>

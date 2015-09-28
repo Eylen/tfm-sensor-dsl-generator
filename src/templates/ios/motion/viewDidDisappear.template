@@ -1,0 +1,9 @@
+<%if (createMethod) {%>-viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear];<%}%>
+    <%if (accelerometer) {%>if ([self.motionManager isAccelerometerAvailable]) {
+        <%if (foreground) {%>[self.motionManager stopAccelerometerUpdates];<%}%>
+    }<%}%>
+    <%if (gyroscope) {%>if ([self.motionManager isGyroAvailable]) {
+        <%if (foreground) {%>[self.motionManager stopGyroUpdates<%}%>
+    }<%}%>
+<%if (createMethod){%>}<%}%>

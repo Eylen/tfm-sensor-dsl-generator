@@ -1,0 +1,9 @@
+-(CMMotionManager *)motionManager
+ {
+    CMMotionManager *motionManager = nil;
+    id appDelegate = [UIApplication sharedApplication].delegate;
+    if ([appDelegate respondsToSelector:@selector(motionManager)]) {
+        motionManager = [appDelegate motionManager];
+    }
+    return motionManager;
+}

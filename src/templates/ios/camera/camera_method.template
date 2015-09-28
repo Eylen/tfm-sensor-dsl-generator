@@ -1,0 +1,19 @@
+- (BOOL) <%=methodName%>: (UIViewController*) controller usingDelegate: (id <UIImagePickerControllerDelegate, UINavigationControllerDelegate>) delegate {
+     if (([UIImagePickerController isSourceTypeAvailable:
+                 UIImagePickerControllerSourceTypeCamera] == NO)
+            || (delegate == nil)
+            || (controller == nil))
+        return NO;
+
+    UIImagePickerController *cameraUI = [[UIImagePickerController alloc] init];
+    cameraUI.sourceType = UIImagePickerControllerSourceTypeCamera;
+
+    <%if (video && picture) {%>cameraUI.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType: UIImagePickerControllerSourceTypeCamera];
+    <%} else {%>cameraUI.mediaTypes = [[NSArray alloc] initWithObjects: (NSString *) <%=video?'kUTTypeMovie':'kUTTypeImage'%>, nil];<%}%>
+
+    // Hides the controls for moving & scaling pictures
+    cameraUI.allowsEditing = NO;
+    cameraUI.delegate = delegate;
+    [controller presentModalViewController: cameraUI animated: YES];
+    return YES;
+}

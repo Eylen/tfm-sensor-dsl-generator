@@ -1,6 +1,6 @@
 import com.eylen.sensordsl.Permission
 import com.eylen.sensordsl.SensorDSL
-import com.eylen.sensordsl.SensorDSLScript
+import com.eylen.sensordsl.generator.SensorDSLScript
 import com.eylen.sensordsl.generator.MainCodeGenerator
 import com.eylen.sensordsl.generator.enums.Platform
 import com.eylen.sensordsl.generator.permission.PermissionCodeGenerator
@@ -44,7 +44,7 @@ sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
         generatedFiles << fileName
 
         SensorDSL sensorDSL = new SensorDSL()
-        binding = new Binding(sensorDSL: sensorDSL, codeFile: null)
+        binding = new Binding(sensorDSL: sensorDSL, codeFile: null, platform:platform, fileName: null)
         def compilerConfiguration = new CompilerConfiguration()
         compilerConfiguration.scriptBaseClass = SensorDSLScript.class.name
         compilerConfiguration.addCompilationCustomizers(

@@ -1,0 +1,3 @@
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    [self <%=callbackMethod%>:[locations objectAtIndex:0]];
+}
