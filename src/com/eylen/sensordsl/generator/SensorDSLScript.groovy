@@ -6,12 +6,19 @@ import com.eylen.sensordsl.handlers.CameraHandler
 import com.eylen.sensordsl.handlers.LocationHandler
 import com.eylen.sensordsl.handlers.MotionSensorHandler
 
+/**
+ * The Base Script class for SensorDSL scripts
+ */
 abstract class SensorDSLScript extends Script{
 
     private SensorDSL sensorDSL
 
+    /**
+     * The script body
+     */
     abstract void scriptBody()
 
+    @Override
     def run(){
         this.sensorDSL = this.binding.sensorDSL
         File fileFile = new File(getClass().protectionDomain.codeSource.location.path)

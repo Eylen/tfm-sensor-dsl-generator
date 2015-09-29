@@ -34,9 +34,11 @@ List<String> generatedFiles = new ArrayList<>()
 
 File permissionFile = null
 Set<Permission> permissions = new HashSet<>()
+// Loop through all files from source directory
 sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
     String pathToFile = it.absolutePath - sourceDirectory.absolutePath - it.name
 
+	// Execute Sensor DSL Scripts
     if(it.name.endsWith('.dsl.groovy')) {
         log.info "Parsing DSL script for file: " + it.name
 
@@ -46,9 +48,9 @@ sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
         SensorDSL sensorDSL = new SensorDSL()
         binding = new Binding(sensorDSL: sensorDSL, codeFile: null, platform:platform, fileName: null)
         def compilerConfiguration = new CompilerConfiguration()
-        compilerConfiguration.scriptBaseClass = SensorDSLScript.class.name
+        compilerConfiguration.scriptBaseClass = SensorDSLScript.class.name //Custom base script
         compilerConfiguration.addCompilationCustomizers(
-                new ASTTransformationCustomizer(TypeChecked)
+                new ASTTransformationCustomizer(TypeChecked) //make type checking of the script before execute
         )
 
         shell = new GroovyShell(this.class.classLoader, binding, compilerConfiguration)
@@ -60,9 +62,10 @@ sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
             codeGenerator.generateCode(platform)
         }
     } else if (GeneratorUtils.isPermissionFile(it, platform)) {
-       permissionFile = it
-
+		//if it's a permission file, we store it for later use
+       	permissionFile = it
     } else {
+		// If it's not a sensorDSL script neither permission file, we just copy it to destination folder
         String fileNameWoExtension = it.name.substring(0, it.name.lastIndexOf("."))
         if (!generatedFiles.contains(fileNameWoExtension)) {
             File fullDestDir = new File(destDirectory.absolutePath + pathToFile)
@@ -73,6 +76,8 @@ sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
         }
     }
 }
+
+// Add permission lines identified during code generation
 if (permissionFile){
     log.info "Adding permissions in file: " + permissionFile.name
     PermissionCodeGenerator permissionCodeGenerator = PermissionCodeGeneratorFactory.newInstance(platform)
@@ -95,9 +100,11 @@ if (permissionFile){
     out.flush()
     out.close()
 }
+
 log.info "-------------------------------------------------------------------------------------------------------------"
 log.info "Generator ended"
 log.info new Date()
+
 /**
  * Parse parameters and check validity. If some of them are invalid, an error is thrown and the generator exists
  * @param args  script arguments
@@ -118,7 +125,7 @@ private def parseScriptArguments(args){
         log.error "Usage: Generator <ANDROID|IOS> <rootPath> <srcdir>? <destdir>?"
         System.exit(-1)
     }
-    Platform platform
+    Platform platform = null
     try {
         platform = Platform.valueOf(platformArg.toUpperCase())
     } catch (Exception e){

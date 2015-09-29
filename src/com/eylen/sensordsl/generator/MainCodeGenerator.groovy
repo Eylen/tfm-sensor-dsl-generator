@@ -14,6 +14,10 @@ import com.eylen.sensordsl.generator.utils.parser.ParsedMethod
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
+/**
+ * The Main code generator.
+ * This generator will call the rest of generators available
+ */
 class MainCodeGenerator {
     private SensorDSL sensorDSL
     private File codeFile
@@ -21,6 +25,13 @@ class MainCodeGenerator {
     private File destDir
     private Logger log
 
+    /**
+     * Constructor
+     * @param sensorDSL     SensorDSL   the executed SensorDSL
+     * @param codeFile      File        the code file where changes should be applied
+     * @param pathToFile    String      the path to the destination code file
+     * @param destDir       File        the destination directory
+     */
     public MainCodeGenerator(SensorDSL sensorDSL, File codeFile, String pathToFile, File destDir){
         this.sensorDSL = sensorDSL
         this.codeFile = codeFile
@@ -29,6 +40,10 @@ class MainCodeGenerator {
         log = LogManager.getLogger(MainCodeGenerator.class)
     }
 
+    /**
+     * Makes the code generation for the designed platform
+     * @param platform  Platform    the platform
+     */
     public void generateCode(Platform platform){
         FileParser fileParser = new FileParser(codeFile)
         fileParser.parseFile(platform)
@@ -50,18 +65,19 @@ class MainCodeGenerator {
         def out = new File(fullDestDir.absolutePath+"/"+codeFile.name).newWriter(false)
         String beforeImports = fileParser.scriptFile.substring(0, fileParser.importsStart)
         String afterImports = fileParser.scriptFile.substring(fileParser.importsStart, fileParser.classStart + 1)
-//        out.writeLine fileParser.scriptFile.substring(0, fileParser.classStart + 1)
         out.write beforeImports
+
         fileParser.imports.each {
             out.writeLine it
         }
+
         out.write afterImports
+
         fileParser.lines.each {
             if (isAddMethodTag(it)){
                 ParsedMethod method = fileParser.methods[getMethodNameFromTag(it)]
                 if (!method){
                     log.warn("No method found for ${getMethodNameFromTag(it)}")
-//                    throw new Exception("Errrrrrooooooooooooooooooooooooooooor")
                 } else {
                     method.lines.each {String methodLine-> out.writeLine methodLine}
                 }
@@ -73,8 +89,6 @@ class MainCodeGenerator {
         out.flush()
 
         //Create new classes if needed
-        //TODO crear paquetes si tiene
-        //TODO add package declaration
         if (fileParser.newClasses.size() > 0){
             fileParser.newClasses.each{String fileName, String classString->
                 out = new File(fullDestDir.absolutePath+"/${fileName}").newWriter(false)
@@ -85,10 +99,20 @@ class MainCodeGenerator {
         }
     }
 
+    /**
+     * Detect if the line is a especial line that indicates that a method should be injected
+     * @param line  String  the line
+     * @return  true if it's a special line, false otherwise
+     */
     private static boolean isAddMethodTag(String line){
         line.indexOf(Constants.ADD_METHOD_TAG) != -1
     }
 
+    /**
+     * Extract the method name from the special line used to indicate that the method lines of code should be injected
+     * @param line  String  the line
+     * @return  the method name
+     */
     private static String getMethodNameFromTag(String line){
         line.substring(line.indexOf(Constants.ADD_METHOD_TAG) + Constants.ADD_METHOD_TAG.length())
     }
