@@ -34,11 +34,12 @@ class AndroidPermissionCodeGenerator implements PermissionCodeGenerator{
                     permissionString = templateEngine.createTemplate(new InputStreamReader(getClass().getResourceAsStream(templateDirPath + "location_permission.template"))).make(fine:permission==Permission.FINE_LOCATION).toString()
                     break
             }
-            String permissionName = permissionString.substring(permissionString.indexOf("android:name=\"") + 14)
-            permissionName = permissionName.substring(0, permissionName.indexOf("\""))
-            println "permissionName = $permissionName"
-            if (!permissionExist(file, permissionName))
-                permissions << permissionString
+            if (permissionString) {
+                String permissionName = permissionString.substring(permissionString.indexOf("android:name=\"") + 14)
+                permissionName = permissionName.substring(0, permissionName.indexOf("\""))
+                if (!permissionExist(file, permissionName))
+                    permissions << permissionString
+            }
         }
         return permissions
     }

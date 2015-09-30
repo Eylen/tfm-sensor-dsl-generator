@@ -33,6 +33,7 @@ log.info "----------------------------------------------------------------------
 List<String> generatedFiles = new ArrayList<>()
 
 File permissionFile = null
+File specialFile = null
 Set<Permission> permissions = new HashSet<>()
 // Loop through all files from source directory
 sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
@@ -64,7 +65,9 @@ sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
     } else if (GeneratorUtils.isPermissionFile(it, platform)) {
 		//if it's a permission file, we store it for later use
        	permissionFile = it
-    } else {
+    } else if (GeneratorUtils.isSpecialFile(it, platform)) {
+        specialFile = it
+    } else{
 		// If it's not a sensorDSL script neither permission file, we just copy it to destination folder
         String fileNameWoExtension = it.name.substring(0, it.name.lastIndexOf("."))
         if (!generatedFiles.contains(fileNameWoExtension)) {

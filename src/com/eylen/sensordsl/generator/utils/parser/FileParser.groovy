@@ -19,8 +19,7 @@ class FileParser {
     Map<String, String> newClasses
     List<String> imports
 
-    //TODO hay que hacer uno diferente para las de Objective-C
-    //TODO anotaciones en métodos --> deberian ir dentro del código de cada método
+    Map<String, String> specialFiles
 
     public FileParser(File file){
         String scriptFile = file.readLines().join("\n")
@@ -34,6 +33,7 @@ class FileParser {
         this.lines = new ArrayList<>()
         this.newClasses = new HashMap<>()
         this.imports = new ArrayList<>()
+        this.specialFiles = new HashMap<>()
     }
 
     public void parseFile(Platform platform){

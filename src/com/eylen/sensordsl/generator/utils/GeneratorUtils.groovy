@@ -56,6 +56,10 @@ class GeneratorUtils {
      * @return  true if it's a permission file
      */
     public static boolean isPermissionFile(File file, Platform platform){
-        return (platform == Platform.ANDROID && file.name == 'AndroidManifest.xml') || (platform == Platform.IOS && file.name == 'Info.plist')
+        return (platform == Platform.ANDROID && file.name == 'AndroidManifest.xml') || (platform == Platform.IOS && file.name.indexOf('Info.plist')!=-1)
+    }
+
+    public static boolean isSpecialFile(File file, Platform platform){
+        return (platform == Platform.IOS && file.name.endsWith('AppDelegate.m'))
     }
 }
