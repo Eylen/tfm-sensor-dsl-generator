@@ -2,9 +2,6 @@ package com.eylen.sensordsl.generator.utils
 
 import com.eylen.sensordsl.generator.enums.Platform
 
-/**
- * Created by Saioa on 17/09/2015.
- */
 class FileParserUtils {
     private static getPlatformProperty(Platform platform, String property){
         switch (platform){
@@ -17,14 +14,19 @@ class FileParserUtils {
         }
     }
 
-    public static int getClassStart(Platform platform, String fileName, String scriptFile){
+    public static int getClassStart(Platform platform, String fileName, String scriptFile, String fileExtension){
         String startIndex = getPlatformProperty(platform, "classStart")
         switch (platform){
             case Platform.ANDROID:
                 return scriptFile.indexOf(startIndex)
             case Platform.IOS:
-                String line = startIndex + " " + fileName
-                return scriptFile.indexOf(line) + line.length()
+                if (fileExtension == ".m"){
+                    String line = startIndex + " " + fileName
+                    return scriptFile.indexOf(line) + line.length()
+                } else {
+                    return 0
+                }
+
         }
     }
 

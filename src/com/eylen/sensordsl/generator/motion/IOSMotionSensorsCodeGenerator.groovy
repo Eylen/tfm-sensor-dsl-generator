@@ -1,6 +1,5 @@
 package com.eylen.sensordsl.generator.motion
 
-import com.eylen.sensordsl.generator.helpers.MotionSensorsGeneratorHelper
 import com.eylen.sensordsl.generator.utils.Constants
 import com.eylen.sensordsl.generator.utils.GeneratorUtils
 import com.eylen.sensordsl.generator.utils.parser.FileParser
@@ -8,9 +7,6 @@ import com.eylen.sensordsl.generator.utils.parser.ParsedMethod
 import groovy.text.SimpleTemplateEngine
 import groovy.text.Template
 
-/**
- * Created by Saioa on 02/09/2015.
- */
 class IOSMotionSensorsCodeGenerator extends MotionSensorsCodeGenerator{
     private SimpleTemplateEngine templateEngine
 
@@ -22,13 +18,14 @@ class IOSMotionSensorsCodeGenerator extends MotionSensorsCodeGenerator{
     @Override
     protected void makeGeneration() {
         String templateDirPath = Constants.TEMPLATES + "/ios/motion/"
-        //TODO en AppDelegate podría ser cualquier clase...
-        Template delegateMotionManagerTemplate = templateEngine.createTemplate(new InputStreamReader(getClass().getResourceAsStream(templateDirPath + "appdelegate/cmotionmanager_declaration.template")))
-        Template delegateMotionManagerMethodTemplate = templateEngine.createTemplate(new InputStreamReader(getClass().getResourceAsStream(templateDirPath + "appdelegate/cmotionmanager_method.template")))
+//        //TODO en AppDelegate podría ser cualquier clase...
+//        Template delegateMotionManagerTemplate = templateEngine.createTemplate(new InputStreamReader(getClass().getResourceAsStream(templateDirPath + "appdelegate/cmotionmanager_declaration.template")))
+//        Template delegateMotionManagerMethodTemplate = templateEngine.createTemplate(new InputStreamReader(getClass().getResourceAsStream(templateDirPath + "appdelegate/cmotionmanager_method.template")))
+//
+//        List<String> appDelegateLines = new ArrayList<>()
+//        String appContent = delegateMotionManagerTemplate.make().toString()
+//        appContent = delegateMotionManagerMethodTemplate.make().toString()
 
-        List<String> appDelegateLines = new ArrayList<>()
-        String appContent = delegateMotionManagerTemplate.make().toString()
-        appContent = delegateMotionManagerMethodTemplate.make().toString()
 
         Template importsTemplate = templateEngine.createTemplate(new InputStreamReader(getClass().getResourceAsStream(templateDirPath +"imports.template")))
         Template motionManagerTemplate = templateEngine.createTemplate(new InputStreamReader(getClass().getResourceAsStream(templateDirPath + "cmotionmanager.template")))

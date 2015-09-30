@@ -4,6 +4,7 @@ import com.eylen.sensordsl.SensorDSL
 import com.eylen.sensordsl.generator.camera.CameraCodeGenerator
 import com.eylen.sensordsl.generator.camera.CameraCodeGeneratorFactory
 import com.eylen.sensordsl.generator.enums.Platform
+import com.eylen.sensordsl.generator.ios.AppDelegateGenerator
 import com.eylen.sensordsl.generator.location.LocationCodeGenerator
 import com.eylen.sensordsl.generator.location.LocationCodeGeneratorFactory
 import com.eylen.sensordsl.generator.motion.MotionSensorsCodeGenerator
@@ -23,6 +24,7 @@ class MainCodeGenerator {
     private File codeFile
     private String pathToFile
     private File destDir
+    private File srcDir
     private Logger log
 
     /**
@@ -32,11 +34,12 @@ class MainCodeGenerator {
      * @param pathToFile    String      the path to the destination code file
      * @param destDir       File        the destination directory
      */
-    public MainCodeGenerator(SensorDSL sensorDSL, File codeFile, String pathToFile, File destDir){
+    public MainCodeGenerator(SensorDSL sensorDSL, File codeFile, String pathToFile, File destDir, File srcDir){
         this.sensorDSL = sensorDSL
         this.codeFile = codeFile
         this.pathToFile = pathToFile
         this.destDir = destDir
+        this.srcDir = srcDir
         log = LogManager.getLogger(MainCodeGenerator.class)
     }
 
@@ -56,6 +59,7 @@ class MainCodeGenerator {
         motionCodeGenerator.generateCode(sensorDSL.motionSensorHandlers)
         LocationCodeGenerator locationCodeGenerator = LocationCodeGeneratorFactory.newInstance(platform, fileParser)
         locationCodeGenerator.generateCode(sensorDSL.locationHandlers)
+
 
         File fullDestDir = new File(destDir.absolutePath + pathToFile)
         if (!fullDestDir.exists()){
@@ -96,6 +100,11 @@ class MainCodeGenerator {
                 out.flush()
                 out.close()
             }
+        }
+
+        if (platform == Platform.IOS){
+            AppDelegateGenerator appDelegateGenerator = new AppDelegateGenerator(sensorDSL, srcDir, destDir)
+            appDelegateGenerator.generate()
         }
     }
 

@@ -13,13 +13,12 @@ class FileParser {
     int classEnd
     int firstMethod
     int importsStart
+    String fileExtension
 
     String beforeInnerClass
     List<String> lines
     Map<String, String> newClasses
     List<String> imports
-
-    Map<String, String> specialFiles
 
     public FileParser(File file){
         String scriptFile = file.readLines().join("\n")
@@ -33,12 +32,12 @@ class FileParser {
         this.lines = new ArrayList<>()
         this.newClasses = new HashMap<>()
         this.imports = new ArrayList<>()
-        this.specialFiles = new HashMap<>()
+        this.fileExtension = file.name.substring(file.name.lastIndexOf("."))
     }
 
     public void parseFile(Platform platform){
 
-        classStart = FileParserUtils.getClassStart(platform, className, scriptFile)
+        classStart = FileParserUtils.getClassStart(platform, className, scriptFile, fileExtension)
         classEnd = scriptFile.lastIndexOf(FileParserUtils.getClassEnd(platform))
         importsStart = scriptFile.indexOf(FileParserUtils.getImportStatement(platform))
 

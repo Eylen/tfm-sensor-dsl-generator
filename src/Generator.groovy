@@ -59,7 +59,7 @@ sourceDirectory.eachFileRecurse(groovy.io.FileType.FILES) {File it->
 
         if (sensorDSL) {
             permissions.addAll sensorDSL.permissionList
-            MainCodeGenerator codeGenerator = new MainCodeGenerator(sensorDSL, binding.codeFile, pathToFile, destDirectory)
+            MainCodeGenerator codeGenerator = new MainCodeGenerator(sensorDSL, binding.codeFile, pathToFile, destDirectory, sourceDirectory)
             codeGenerator.generateCode(platform)
         }
     } else if (GeneratorUtils.isPermissionFile(it, platform)) {
